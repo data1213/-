@@ -31,6 +31,9 @@ void MainWindow::update_my_timer(){
     QString str = temp.toString("hh:mm:ss.zzz");
     this->ui->lcdNumber->display(str);
 
+    //为了实现打点记录，这里先获取下当前时间
+    this->show_time = str;
+
 }
 
 //点击开始按钮之后触发计时器开始计时
@@ -39,4 +42,23 @@ void MainWindow::on_btn_begin_clicked()
     this->p_timer->start(1);  //启动1ms周期的定时器开始计时
     //0、记录当前时间
     this->count_time = QTime::currentTime();
+}
+
+void MainWindow::on_btn_end_clicked()
+{
+
+}
+
+void MainWindow::on_btn_hold_clicked()
+{
+
+}
+
+//打点功能：
+void MainWindow::on_btn_flag_clicked()
+{
+    //获取当前计数，并显式在text brower控件中显式
+    //this->ui->lcdNumber->value();是一个double值，不是时间值
+    //this->ui->textBrowser->setText()方法会覆盖之前的文本内容
+    this->ui->textBrowser->append(this->show_time);
 }
