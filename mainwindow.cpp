@@ -46,7 +46,14 @@ void MainWindow::on_btn_begin_clicked()
 
 void MainWindow::on_btn_end_clicked()
 {
-
+    if(this->ui->btn_end->text() == "停止"){
+        this->p_timer->stop();
+        this->ui->btn_end->text() = "清零";
+    }else {  //清零
+        this->ui->lcdNumber->display("00:00:00:000");
+        this->ui->textBrowser->clear();
+        this->ui->btn_end->text() = "停止";
+    }
 }
 
 //暂停功能
