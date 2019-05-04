@@ -10,6 +10,12 @@ MainWindow::MainWindow(QWidget *parent) :
     this->p_timer = new QTimer();
     connect(this->p_timer, SIGNAL(timeout()), this, SLOT(update_my_timer())); //绑定定时器和槽函数
 
+    //一开始只设置开始按钮可用
+    this->ui->btn_hold->setEnabled(false);
+    this->ui->btn_flag->setEnabled(false);
+    this->ui->btn_end->setEnabled(false);
+
+
 }
 
 MainWindow::~MainWindow()
@@ -42,17 +48,35 @@ void MainWindow::on_btn_begin_clicked()
     this->p_timer->start(1);  //启动1ms周期的定时器开始计时
     //0、记录当前时间
     this->count_time = QTime::currentTime();
+
+    //避免再次点击，需要设置开始按钮不可用
+    this->ui->btn_begin->setEnabled(false);
+    //其他按钮可用
+    this->ui->btn_hold->setEnabled(true);
+    this->ui->btn_flag->setEnabled(true);
+    this->ui->btn_end->setEnabled(true);
 }
 
 void MainWindow::on_btn_end_clicked()
 {
     if(this->ui->btn_end->text() == "停止"){
         this->p_timer->stop();
-        this->ui->btn_end->text() = "清零";
+        this->ui->btn_end->setText("清零");
+
+        this->ui->btn_hold->setEnabled(false);  //暂停不可用，开始也还是不能用
+
+        //如果是点击暂停按钮之后（本身变成继续）点击停止，那么需要将暂停按钮重新设置为暂停
+        this->ui->btn_hold->setText("暂停");
+
     }else {  //清零
         this->ui->lcdNumber->display("00:00:00:000");
         this->ui->textBrowser->clear();
-        this->ui->btn_end->text() = "停止";
+        this->ui->btn_end->setText("停止");
+
+        this->ui->btn_begin->setEnabled(true);  //开始按钮重新可用
+        //this->ui->btn_hold->setEnabled(false);//暂停继续不可用
+        this->ui->btn_flag->setEnabled(false);
+        this->ui->btn_end->setEnabled(false);
     }
 }
 
