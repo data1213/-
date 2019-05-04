@@ -49,9 +49,25 @@ void MainWindow::on_btn_end_clicked()
 
 }
 
+//暂停功能
 void MainWindow::on_btn_hold_clicked()
 {
+    //old_time需要时静态的，记录点击暂停时的时间，保留到下次调用该函数——点击继续时调用
+    static QTime old_time;
 
+    if(this->ui->btn_hold->text() == "暂停"){
+        old_time = QTime::currentTime();
+        this->p_timer->stop();//暂停计数,当系统时间一直在走，而count_timer没有变化了
+        this->ui->btn_hold->setText("继续");
+    }else {
+        QTime new_time = QTime::currentTime();
+        int mdiff = old_time.msecsTo(new_time);
+        //更新从上一次点击暂停到这次点击继续之间系统经过的时间，然后补偿给count_timer
+        this->count_time = this->count_time.addMSecs(mdiff);
+        //开启计时器
+        this->p_timer->start(1);
+        this->ui->btn_hold->setText("暂停");
+    }
 }
 
 //打点功能：
